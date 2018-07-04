@@ -1,6 +1,7 @@
 package app
 
 import (
+	"encoding/base64"
 	"file"
 	"fmt"
 	"log"
@@ -41,7 +42,9 @@ func EncryptFile(name string) error {
 		return err
 	}
 
-	err = file.Write(name, string(pubenctypt))
+	writeFinal := base64.StdEncoding.EncodeToString(pubenctypt)
+
+	err = file.Write(name, writeFinal)
 	if err != nil {
 		return err
 	}
@@ -58,6 +61,11 @@ func DecryptFile(name string) error {
 		return err
 	}
 
+	fileVal, err := base64.StdEncoding.DecodeString(fileContext)
+	if nil != err {
+		return err
+	}
+
 	strPriKey, err := file.Read("private.pem")
 	if nil != err {
 		return err
@@ -68,7 +76,7 @@ func DecryptFile(name string) error {
 		return err
 	}
 
-	pridecrypt, err := RSA.PriKeyDECRYPT([]byte(fileContext))
+	pridecrypt, err := RSA.PriKeyDECRYPT(fileVal)
 	if err != nil {
 		return err
 	}
