@@ -27,17 +27,17 @@ func EncryptFile(name string) error {
 		return err
 	}
 
-	strPubKey, err := file.Read("public.pem")
+	strPvKey, err := file.Read("private.pem")
 	if nil != err {
 		return err
 	}
 
 	var RSA = gorsa.RSASecurity{}
-	if err := RSA.SetPublicKey(strPubKey); err != nil {
+	if err := RSA.SetPrivateKey(strPvKey); err != nil {
 		return err
 	}
 
-	pubenctypt, err := RSA.PubKeyENCTYPT([]byte(fileContext))
+	pubenctypt, err := RSA.PriKeyENCTYPT([]byte(fileContext))
 	if err != nil {
 		return err
 	}
@@ -66,17 +66,17 @@ func DecryptFile(name string) error {
 		return err
 	}
 
-	strPriKey, err := file.Read("private.pem")
+	strPubKey, err := file.Read("public.pem")
 	if nil != err {
 		return err
 	}
 
 	var RSA = gorsa.RSASecurity{}
-	if err := RSA.SetPrivateKey(strPriKey); err != nil {
+	if err := RSA.SetPublicKey(strPubKey); err != nil {
 		return err
 	}
 
-	pridecrypt, err := RSA.PriKeyDECRYPT(fileVal)
+	pridecrypt, err := RSA.PubKeyDECRYPT(fileVal)
 	if err != nil {
 		return err
 	}
